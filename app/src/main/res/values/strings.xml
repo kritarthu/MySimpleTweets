@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Simple Tweets</string>
+    <string name="action_settings">Log in</string>
+    <string name="title_activity_timeline">Log in</string>
+    <string name="login_label">CONNECT TO TWITTER</string>
+    <string name="title_activity_time_line">Home TIMELINE</string>
+</resources>
