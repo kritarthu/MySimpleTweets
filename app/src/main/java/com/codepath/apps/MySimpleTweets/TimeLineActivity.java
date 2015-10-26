@@ -1,5 +1,6 @@
 package com.codepath.apps.MySimpleTweets;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -22,6 +24,9 @@ public class TimeLineActivity extends AppCompatActivity {
     private TweetsArrayAdapter aTweets;
     private ArrayList<Tweet> tweets;
     private ListView lvTweets;
+    private static int REQUEST_CODE = 10;
+    private static String username;
+    private static String imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +40,58 @@ public class TimeLineActivity extends AppCompatActivity {
 
         client = TwitterApplication.getRestClient();
         populateTimeLine();
+        populateUserDetails();
+        populateProfileDetails();
+
     }
 
     private void populateTimeLine() {
-        client.getHomePageTimeline(new JsonHttpResponseHandler(){
+        client.getHomePageTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("DEBUG", "Response" +response.toString());
+                Log.d("DEBUG", "Response" + response.toString());
                 aTweets.addAll(Tweet.fromJSONArray(response));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                Log.d("DEBUG", object.toString());
+
+            }
+        });
+    }
+
+    private void populateUserDetails() {
+        client.getUserDetails(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", "Response" + response.toString());
+                try {
+                    TimeLineActivity.username = response.getString("screen_name");
+                } catch (JSONException e) {
+                    Log.d("DEBUG", e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                Log.d("DEBUG", object.toString());
+
+            }
+        });
+    }
+
+    private void populateProfileDetails() {
+        client.getUserProfileImageDetails(TimeLineActivity.username, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", "Response" + response.toString());
+                try {
+                    TimeLineActivity.username = response.getString("screen_name");
+                    TimeLineActivity.imageUrl = response.getString("profile_image_url");
+                } catch (JSONException e) {
+                    Log.d("DEBUG", e.getMessage());
+                }
             }
 
             @Override
@@ -71,7 +120,24 @@ public class TimeLineActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_tweet) {
+            Intent i = new Intent(TimeLineActivity.this, TweetActivity.class);
+            i.putExtra("username", TimeLineActivity.username);
+            i.putExtra("image", TimeLineActivity.imageUrl);
+            startActivityForResult(i, REQUEST_CODE);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    // ActivityOne.java, time to handle the result of the sub-activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            aTweets.clear();
+            populateTimeLine();
+        }
     }
 }
