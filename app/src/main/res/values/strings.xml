@@ -4,6 +4,6 @@
     <string name="action_settings">Log in</string>
     <string name="title_activity_timeline">Log in</string>
     <string name="login_label">CONNECT TO TWITTER</string>
-    <string name="title_activity_time_line">Tweets</string>
-    <string name="title_activity_tweet">TweetActivity</string>
+    <string name="title_activity_time_line"></string>
+    <string name="title_activity_tweet">Tweet</string>
 </resources>

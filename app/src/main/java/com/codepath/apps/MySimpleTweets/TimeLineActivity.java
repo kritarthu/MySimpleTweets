@@ -27,6 +27,7 @@ public class TimeLineActivity extends AppCompatActivity {
     private static int REQUEST_CODE = 10;
     private static String username;
     private static String imageUrl;
+    private static String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +39,11 @@ public class TimeLineActivity extends AppCompatActivity {
         aTweets = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(aTweets);
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_action_name);
         client = TwitterApplication.getRestClient();
         populateTimeLine();
         populateUserDetails();
-        populateProfileDetails();
-
     }
 
     private void populateTimeLine() {
@@ -65,9 +66,10 @@ public class TimeLineActivity extends AppCompatActivity {
         client.getUserDetails(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "Response" + response.toString());
+                Log.d("DEBUG", "Response11" + response.toString());
                 try {
                     TimeLineActivity.username = response.getString("screen_name");
+                    populateProfileDetails();
                 } catch (JSONException e) {
                     Log.d("DEBUG", e.getMessage());
                 }
@@ -85,10 +87,11 @@ public class TimeLineActivity extends AppCompatActivity {
         client.getUserProfileImageDetails(TimeLineActivity.username, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "Response" + response.toString());
+                Log.d("DEBUG", "Response1" + response.toString());
                 try {
                     TimeLineActivity.username = response.getString("screen_name");
                     TimeLineActivity.imageUrl = response.getString("profile_image_url");
+                    TimeLineActivity.name = response.getString("name");
                 } catch (JSONException e) {
                     Log.d("DEBUG", e.getMessage());
                 }
@@ -123,7 +126,8 @@ public class TimeLineActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_tweet) {
             Intent i = new Intent(TimeLineActivity.this, TweetActivity.class);
-            i.putExtra("username", TimeLineActivity.username);
+            i.putExtra("screenname", TimeLineActivity.username);
+            i.putExtra("name", TimeLineActivity.name);
             i.putExtra("image", TimeLineActivity.imageUrl);
             startActivityForResult(i, REQUEST_CODE);
             return true;
@@ -140,4 +144,5 @@ public class TimeLineActivity extends AppCompatActivity {
             populateTimeLine();
         }
     }
+
 }

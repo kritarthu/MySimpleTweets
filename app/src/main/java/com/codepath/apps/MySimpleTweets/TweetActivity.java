@@ -19,7 +19,8 @@ import org.json.JSONObject;
 public class TweetActivity extends AppCompatActivity {
 
     private ImageView ivProfileImage;
-    private TextView tvUserName;
+    private TextView tvScreenName;
+    private TextView tvName;
     private EditText etTweet;
     private TwitterClient client;
 
@@ -29,11 +30,13 @@ public class TweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweet);
         client = TwitterApplication.getRestClient();
         Intent i = getIntent();
-        tvUserName = (TextView)findViewById(R.id.tvName);
+        tvName = (TextView)findViewById(R.id.tvName);
+        tvScreenName = (TextView)findViewById(R.id.tvScreenName);
         ivProfileImage = (ImageView)findViewById(R.id.ivProfileImage);
         etTweet = (EditText)findViewById(R.id.etTweet);
 
-        tvUserName.setText(i.getStringExtra("username"));
+        tvName.setText(i.getStringExtra("name"));
+        tvScreenName.setText("@"+i.getStringExtra("screenname"));
         ivProfileImage.setImageResource(android.R.color.transparent);
         Picasso.with(this).load(i.getStringExtra("image")).into(ivProfileImage);
     }

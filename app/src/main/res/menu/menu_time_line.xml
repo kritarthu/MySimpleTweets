@@ -4,5 +4,5 @@
     tools:context="com.codepath.apps.MySimpleTweets.TimeLineActivity">
     <item android:id="@+id/action_tweet" android:title="Create"
         android:orderInCategory="100" app:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_edit"/>
+        android:icon="@mipmap/ic_tweet"/>
 </menu>

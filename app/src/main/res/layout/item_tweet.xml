@@ -5,8 +5,8 @@
     android:padding="15dp">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/ivProfileImage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -20,9 +20,10 @@
         android:text="New Text"
         android:id="@+id/tvName"
         android:layout_toRightOf="@+id/ivProfileImage"
-        android:textColor="#346eff"
         android:textStyle="bold|italic"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:textSize="13sp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +36,10 @@
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:ellipsize="end"
-        android:minLines="2" />
+        android:minLines="2"
+        android:autoLink="all"
+        android:linksClickable="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,7 +50,11 @@
         android:layout_toRightOf="@+id/tvName"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/tvTime"
-        android:layout_toStartOf="@+id/tvTime" />
+        android:layout_toStartOf="@+id/tvTime"
+        android:textSize="12sp"
+        android:textStyle="bold|italic"
+        android:textColor="#FF007EAC"
+        />
 
     <TextView
         android:layout_width="wrap_content"
