@@ -1,6 +1,7 @@
 package com.codepath.apps.MySimpleTweets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,10 +43,21 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         tvScreenName.setText("  @"+tweet.getUser().getScreenName());
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent);
+        ivProfileImage.setTag(tweet.getUser().getScreenName());
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
         tvTime.setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+        ivProfileImage.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Do whatever you want here, you can use the position variable to handle current view specifically
+                        Intent i = new Intent(getContext(), ProfileActivity.class); // this is the data you have in this listView item
+                        i.putExtra("screen_name", (String)v.getTag());
+                        getContext().startActivity(i);
+                    }
+                }
+        );
         return convertView;
-
     }
 
     public String getRelativeTimeAgo(String rawJsonDate) {

@@ -1,6 +1,7 @@
 package com.codepath.apps.MySimpleTweets;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -49,6 +50,35 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("count", 25);
 		params.put("since_id", 1);
+		client.get(apiUrl, params, handler);
+	}
+
+    public void getUserTimeline(String screenname, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("screen_name", screenname);
+        Log.d("DEBUG", "getUserTimeline");
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getUserInfo(String screenname, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("users/show.json");
+        Log.d("DEBUG", "getUserInfo "+screenname);
+        RequestParams params = new RequestParams();
+        if(params!=null) {
+            params.put("screen_name", screenname);
+        }
+        client.get(apiUrl, params, handler);
+    }
+
+	public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+        Log.d("DEBUG", "getMentionsTimeline");
+        params.put("count", 25);
 		client.get(apiUrl, params, handler);
 	}
 

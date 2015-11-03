@@ -5,4 +5,9 @@
     <item android:id="@+id/action_tweet" android:title="Create"
         android:orderInCategory="100" app:showAsAction="always"
         android:icon="@mipmap/ic_tweet"/>
+
+    <item android:id="@+id/miProfile" android:title="Profile"
+        app:showAsAction="always"
+        android:icon="@mipmap/ic_tweet"
+        android:onClick="onProfileView"/>
 </menu>

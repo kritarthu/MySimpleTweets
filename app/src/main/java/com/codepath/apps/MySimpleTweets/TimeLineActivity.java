@@ -2,107 +2,32 @@ package com.codepath.apps.MySimpleTweets;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-import com.codepath.apps.MySimpleTweets.models.Tweet;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.astuetz.PagerSlidingTabStrip;
+import com.codepath.apps.MySimpleTweets.fragments.HomeTimelineFragment;
+import com.codepath.apps.MySimpleTweets.fragments.MentionsTimelineFragment;
 
 public class TimeLineActivity extends AppCompatActivity {
 
-    private TwitterClient client;
-    private TweetsArrayAdapter aTweets;
-    private ArrayList<Tweet> tweets;
-    private ListView lvTweets;
     private static int REQUEST_CODE = 10;
-    private static String username;
-    private static String imageUrl;
-    private static String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_line);
-
-        lvTweets = (ListView)findViewById(R.id.lvTweets);
-        tweets = new ArrayList<>();
-        aTweets = new TweetsArrayAdapter(this, tweets);
-        lvTweets.setAdapter(aTweets);
-
+        ViewPager vpPager = (ViewPager)findViewById(R.id.viewpager);
+        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager()));
+        PagerSlidingTabStrip tabStrip  = (PagerSlidingTabStrip)findViewById(R.id.tabs);
+        tabStrip.setViewPager(vpPager);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.ic_action_name);
-        client = TwitterApplication.getRestClient();
-        populateTimeLine();
-        populateUserDetails();
-    }
-
-    private void populateTimeLine() {
-        client.getHomePageTimeline(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("DEBUG", "Response" + response.toString());
-                aTweets.addAll(Tweet.fromJSONArray(response));
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                Log.d("DEBUG", object.toString());
-
-            }
-        });
-    }
-
-    private void populateUserDetails() {
-        client.getUserDetails(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "Response11" + response.toString());
-                try {
-                    TimeLineActivity.username = response.getString("screen_name");
-                    populateProfileDetails();
-                } catch (JSONException e) {
-                    Log.d("DEBUG", e.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                Log.d("DEBUG", object.toString());
-
-            }
-        });
-    }
-
-    private void populateProfileDetails() {
-        client.getUserProfileImageDetails(TimeLineActivity.username, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "Response1" + response.toString());
-                try {
-                    TimeLineActivity.username = response.getString("screen_name");
-                    TimeLineActivity.imageUrl = response.getString("profile_image_url");
-                    TimeLineActivity.name = response.getString("name");
-                } catch (JSONException e) {
-                    Log.d("DEBUG", e.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
-                Log.d("DEBUG", object.toString());
-
-            }
-        });
     }
 
     @Override
@@ -126,9 +51,9 @@ public class TimeLineActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_tweet) {
             Intent i = new Intent(TimeLineActivity.this, TweetActivity.class);
-            i.putExtra("screenname", TimeLineActivity.username);
-            i.putExtra("name", TimeLineActivity.name);
-            i.putExtra("image", TimeLineActivity.imageUrl);
+            i.putExtra("screenname", HomeTimelineFragment.username);
+            i.putExtra("name", HomeTimelineFragment.name);
+            i.putExtra("image", HomeTimelineFragment.imageUrl);
             startActivityForResult(i, REQUEST_CODE);
             return true;
         }
@@ -140,9 +65,41 @@ public class TimeLineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            aTweets.clear();
-            populateTimeLine();
+//            tweetListFragment.populateTimeLine();
         }
     }
 
+
+    public class TweetsPagerAdapter extends FragmentPagerAdapter{
+        public String tabTitlesp[] = {"Home", "Mentions"};
+
+        public TweetsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            if(position==0) {
+                return new HomeTimelineFragment();
+            } else if (position == 1) {
+                return new MentionsTimelineFragment();
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitlesp[position];
+        }
+
+        @Override
+        public int getCount() {
+            return tabTitlesp.length;
+        }
+    }
+
+    public void onProfileView(MenuItem menu) {
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
+    }
 }
