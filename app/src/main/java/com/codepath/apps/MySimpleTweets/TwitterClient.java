@@ -65,16 +65,18 @@ public class TwitterClient extends OAuthBaseClient {
 
     public void getUserInfo(String screenname, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("users/show.json");
-        Log.d("DEBUG", "getUserInfo "+screenname);
+        Log.d("DEBUG", "getUserInfo " + screenname);
         RequestParams params = new RequestParams();
-        if(params!=null) {
+        if(screenname!=null) {
             params.put("screen_name", screenname);
+        } else {
+            params = null;
         }
         client.get(apiUrl, params, handler);
     }
 
 	public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
         Log.d("DEBUG", "getMentionsTimeline");
@@ -87,6 +89,13 @@ public class TwitterClient extends OAuthBaseClient {
         // Can specify query string params directly or through RequestParams.
         RequestParams params = new RequestParams();
         client.get(apiUrl, params, handler);
+    }
+
+    public void verifyCredentials(AsyncHttpResponseHandler handler) {
+        Log.d("DEBUG", "verifyCredentials");
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        // Can specify query string params directly or through RequestParams.
+        client.get(apiUrl, null, handler);
     }
 
     public void getUserProfileImageDetails(String username, AsyncHttpResponseHandler handler) {

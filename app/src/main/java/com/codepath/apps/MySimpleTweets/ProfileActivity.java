@@ -21,27 +21,46 @@ public class ProfileActivity extends AppCompatActivity {
 
     TwitterClient client;
     User user;
+    String screenName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         client = TwitterApplication.getRestClient();
-        String screenName = getIntent().getStringExtra("screen_name");
+        screenName = getIntent().getStringExtra("screen_name");
+        if(screenName==null) {
+            client.verifyCredentials(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        Log.d("DEBUG", "Screenname:" +response.getString("screen_name"));
+                        screenName = response.getString("screen_name");
+                        client.getUserInfo(screenName, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                user = User.fromJSON(response);
+                                getSupportActionBar().setTitle("@" + user.getScreenName());
+                                populateProfileHeader(user);
+                            }
 
-        client.getUserInfo(screenName, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                getSupportActionBar().setTitle("@" + user.getScreenName());
-                populateProfileHeader(user);
-            }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                Log.d("DEBUG", responseString);
+                                super.onFailure(statusCode, headers, responseString, throwable);
+                            }
+                        });
+                    } catch(Exception e) {
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("DEBUG", responseString);
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        });
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("DEBUG", responseString);
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+        }
 
         if(savedInstanceState==null) {
             UserTimeLineFragment fragmentUserTimeline = UserTimeLineFragment.newInstance(screenName);
