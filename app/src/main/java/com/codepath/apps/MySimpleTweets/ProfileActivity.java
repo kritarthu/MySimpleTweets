@@ -60,6 +60,21 @@ public class ProfileActivity extends AppCompatActivity {
                     super.onFailure(statusCode, headers, responseString, throwable);
                 }
             });
+        } else {
+            client.getUserInfo(screenName, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    user = User.fromJSON(response);
+                    getSupportActionBar().setTitle("@" + user.getScreenName());
+                    populateProfileHeader(user);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("DEBUG", responseString);
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
         }
 
         if(savedInstanceState==null) {
