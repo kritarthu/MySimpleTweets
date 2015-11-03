@@ -8,15 +8,15 @@ Time spent: 12 hours spent in total
 
 The following **required** functionality is completed:
 
-* [*] The app includes **all required user stories** from Week 3 Twitter Client
-* [*] User can **switch between Timeline and Mention views using tabs**
-  * [*] User can view their home timeline tweets.
-  * [*] User can view the recent mentions of their username.
-* [*] User can navigate to **view their own profile**
-  * [*] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
-* [*] User can **click on the profile image** in any tweet to see **another user's** profile.
- * [*] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
- * [*] Profile view includes that user's timeline
+* [x] The app includes **all required user stories** from Week 3 Twitter Client
+* [x] User can **switch between Timeline and Mention views using tabs**
+  * [x] User can view their home timeline tweets.
+  * [x] User can view the recent mentions of their username.
+* [x] User can navigate to **view their own profile**
+  * [x] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+* [x] User can **click on the profile image** in any tweet to see **another user's** profile.
+ * [x] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
+ * [x] Profile view includes that user's timeline
 * [ ] User can [infinitely paginate](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews) any of these timelines (home, mentions, user) by scrolling to the bottom
 
 The following **optional** features are implemented:
@@ -43,7 +43,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/V4eOkTC.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/V4eOkTC.gif?1' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
