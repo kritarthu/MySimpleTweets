@@ -31,12 +31,16 @@ public class UserTimeLineFragment extends TweetListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = TwitterApplication.getRestClient();
-        populateTimeline();
+        populateTimeline(5);
     }
 
-    private void populateTimeline() {
+    protected void populateTimeline(int maxId) {
+        populateTimeLine(maxId);
+    }
+
+    private void populateTimeLine(int maxId) {
         String screen_name = getArguments().getString("screen_name");
-        client.getUserTimeline(screen_name, new JsonHttpResponseHandler() {
+        client.getUserTimeline(screen_name, maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("DEBUG", "Response1" + response.toString());

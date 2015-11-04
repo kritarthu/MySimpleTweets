@@ -44,22 +44,24 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 
-	public void getHomePageTimeline(AsyncHttpResponseHandler handler) {
+	public void getHomePageTimeline(int maxId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
-		params.put("since_id", 1);
-		client.get(apiUrl, params, handler);
+		params.put("count", 5);
+		params.put("since_id", maxId);
+        Log.d("DEBUG", "getHomePageTimeline" + maxId);
+        client.get(apiUrl, params, handler);
 	}
 
-    public void getUserTimeline(String screenname, AsyncHttpResponseHandler handler) {
+    public void getUserTimeline(String screenname,int maxId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/user_timeline.json");
         // Can specify query string params directly or through RequestParams.
         RequestParams params = new RequestParams();
-        params.put("count", 25);
+        params.put("count", 5);
+        params.put("since_id", maxId);
         params.put("screen_name", screenname);
-        Log.d("DEBUG", "getUserTimeline");
+        Log.d("DEBUG", "getUserTimeline"+maxId);
         client.get(apiUrl, params, handler);
     }
 
@@ -75,13 +77,14 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(apiUrl, params, handler);
     }
 
-	public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
+	public void getMentionsTimeline(int maxId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-        Log.d("DEBUG", "getMentionsTimeline");
-        params.put("count", 25);
-		client.get(apiUrl, params, handler);
+        Log.d("DEBUG", "getMentionsTimeline"+maxId);
+        params.put("count", 5);
+        params.put("since_id", maxId);
+        client.get(apiUrl, params, handler);
 	}
 
     public void getUserDetails(AsyncHttpResponseHandler handler) {
